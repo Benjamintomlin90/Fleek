@@ -1,0 +1,291 @@
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+ 
+<link rel="preload" href="{{ 'component-rte.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+<noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
+{% comment %}
+{%- style -%} 
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+{% endcomment %}
+
+<section class="section-homepage-banner collection-top">  
+  <div class="page-width">
+  <div class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}" tabindex="-1">
+  {%- if settings.predictive_search_enabled -%}
+  <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+    {%- endif -%}
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+      <div class="field">
+        <input class="search__input field__input"
+               id="Search-In-Modal"
+               type="search"
+               name="q"
+               value=""
+               placeholder="Search products or shops"
+               {%- if settings.predictive_search_enabled -%}
+               role="combobox"
+               aria-expanded="false"
+               aria-owns="predictive-search-results-list"
+               aria-controls="predictive-search-results-list"
+               aria-haspopup="listbox"
+               aria-autocomplete="list"
+               autocorrect="off"
+               autocomplete="off"
+               autocapitalize="off"
+               spellcheck="false"
+               {%- endif -%}
+               >
+        <label class="field__label" for="Search-In-Modal">Search products or shops</label>
+        <input type="hidden" name="options[prefix]" value="last">
+        <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+          <svg class="icon icon-search" aria-hidden="true" focusable="false" role="presentation">
+            <use href="#icon-search">
+          </svg>
+        </button>
+      </div>
+
+        {%- if settings.predictive_search_enabled -%}
+        <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+          <div class="predictive-search__loading-state">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+            </svg>
+          </div>
+        </div>
+
+        <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+        {%- endif -%}
+    </form>
+  {%- if settings.predictive_search_enabled -%}
+  </predictive-search>
+  {%- endif -%}  
+  </div>
+  </div>
+</section>
+  
+<section class="section-collection-info">
+  <div class="page-width">
+    <div class="collection-info-box">
+      <div class="cinfo-avatar">
+        {%- if section.settings.image != blank -%}
+          <img
+            srcset="{{ section.settings.image | image_url: width: 120 }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            loading="lazy"
+            width="120"
+            height="120"
+          >
+        {%- else -%}
+<!--           {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }} -->
+        {%- endif -%}
+      </div>
+      {%- if section.settings.heading != blank -%}
+      <p class="cinfo-title">{{ section.settings.heading | escape }}</p>
+      {%- else -%}
+      <p class="cinfo-title">{{ collection.title }}</p>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+      <p class="cinfo-location">📍 {{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+      <div class="cinfo-description">
+        <div class="less-box">{{ section.settings.text }} <a href="javascript:void(0);" class="btn-less">less</a></div>
+        {{ section.settings.text | truncate: 120 }} <a href="javascript:void(0);" class="btn-more">more</a>
+      </div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+      <div class="cinfo-button">
+        <a{% if section.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link }}"{% endif %} class="button">
+          {{ section.settings.button_label | escape }}
+        </a>        
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<div class="section-{{ section.id }}-padding">
+  <div id="ProductGridContainer">
+    
+    {%- paginate collection.products by 1000 -%}
+      {%- if collection.products.size == 0 -%}
+        <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+          <div class="loading-overlay gradient"></div>
+          <div class="title-wrapper center">
+            <h2 class="title title--primary">
+              {{ 'sections.collection_template.empty' | t }}<br>
+              {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}
+            </h2>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="collection page-width">
+          <div class="loading-overlay gradient"></div>
+  
+          <ul id="product-grid" data-id="{{ section.id }}" class="
+            grid product-grid grid--2-col-tablet-down
+            grid--4-col-desktop newcollection-wrap">
+            {%- if section.settings.image2 != blank -%}
+            <li class="grid__item">
+              <div class="card-wrapper underline-links-hover mine-card">
+                <div class="card card--standard card--media"
+                     style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">
+                  <div class="card__inner color-background-2 gradient ratio" style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">                    
+                    <div class="card__media">
+                      <div class="media media--transparent media--hover-effect">
+                        <img
+                             srcset="{{ section.settings.image2 | image_url: width: 240  }}"
+                             alt="{{ section.settings.image2.alt | escape }}"
+                             loading="lazy"
+                             width="240"
+                             height="360"
+                             >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card__content">
+                    <div class="card__information">
+                      <h3 class="card__heading">
+                        <a href="#" class="full-unstyled-link normal-title">
+                          Prices
+                        </a>
+                      </h3>
+                      <div class="card-information">                        
+                      </div>
+                    </div>                    
+                  </div>
+                </div>
+              </div>            
+            </li>
+            {%- endif -%}
+            {%- if section.settings.videourl != blank -%}
+            <li class="grid__item">
+              <div class="card-wrapper underline-links-hover mine-card">
+                <div class="card card--standard card--media"
+                     style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">
+                  <div class="card__inner color-background-2 gradient ratio" style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">                    
+                    <div class="card__media">
+                      <div class="media media--transparent media--hover-effect">
+                        <video muted loop playsinline autoplay preload="metadata" style="object-fit: cover; object-position: center center;">
+						  <source src="{{ section.settings.videourl }}" type="video/mp4">
+                        </video>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card__content">
+                    <div class="card__information">
+                      <h3 class="card__heading{% if card_product.featured_media or settings.card_style == 'standard' %} h5{% endif %}">
+                        <a href="#" class="full-unstyled-link normal-title">
+                          {{ section.settings.heading | escape }}
+                        </a>
+                      </h3>
+                      <div class="card-information">                        
+                      </div>
+                    </div>                    
+                  </div>
+                </div>
+              </div>            
+            </li>
+            {%- endif -%}            
+            {% assign productlist = collection.products | sort : 'published_at' | reverse %}
+            {%- for product in productlist -%}
+              {% assign lazy_load = true %}
+              
+              <li class="grid__item">
+                {% render 'card-product',
+                  card_product: product,
+                  media_aspect_ratio: 'adapt',
+                  show_secondary_image: 'false',
+                  show_vendor: 'false',
+                  show_rating: 'false',
+                  lazy_load: lazy_load
+                %}
+              </li>
+              
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate, anchor: '' %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Collection Info",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "Collection Title",
+        "label": "t:sections.collage.settings.heading.label"
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "default": "Location",
+        "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__1.label"
+      },
+	  {
+		"type": "image_picker",
+        "id": "image",
+        "label": "t:sections.collage.blocks.image.settings.image.label"
+	  },
+	  {
+        "type": "richtext",
+        "id": "text",
+        "default": "<p>Description</p>",
+        "label": "t:sections.rich-text.blocks.text.settings.text.label"
+      },
+      {
+        "type": "text",
+        "id": "videourl",
+        "default": "Video Url:https://",
+        "label": "Video Url"
+      },
+	  {
+		"type": "image_picker",
+        "id": "image2",
+        "label": "Price Image"
+	  },
+  	  {
+        "type": "text",
+        "id": "button_label",
+        "default": "Button label",
+        "label": "t:sections.rich-text.blocks.button.settings.button_label.label"
+      },
+      {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.rich-text.blocks.button.settings.button_link.label"
+      }
+	],
+	"presets": [
+      {
+        "name": "Collection Info"        
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

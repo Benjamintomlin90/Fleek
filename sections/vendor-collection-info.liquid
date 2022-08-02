@@ -1,0 +1,340 @@
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+<link rel="preload" href="{{ 'component-rte.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+<noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
+{% comment %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+{% endcomment %}
+
+<section class="section-homepage-banner collection-top">  
+  <div class="page-width">
+  <div class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}" tabindex="-1">
+  {%- if settings.predictive_search_enabled -%}
+  <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+    {%- endif -%}
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+      <div class="field">
+        <input class="search__input field__input"
+               id="Search-In-Modal"
+               type="search"
+               name="q"
+               value=""
+               placeholder="Search products or shops"
+               {%- if settings.predictive_search_enabled -%}
+               role="combobox"
+               aria-expanded="false"
+               aria-owns="predictive-search-results-list"
+               aria-controls="predictive-search-results-list"
+               aria-haspopup="listbox"
+               aria-autocomplete="list"
+               autocorrect="off"
+               autocomplete="off"
+               autocapitalize="off"
+               spellcheck="false"
+               {%- endif -%}
+               >
+        <label class="field__label" for="Search-In-Modal">Search products or shops</label>
+        <input type="hidden" name="options[prefix]" value="last">
+        <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+          <svg class="icon icon-search" aria-hidden="true" focusable="false" role="presentation">
+            <use href="#icon-search">
+          </svg>
+        </button>
+      </div>
+
+        {%- if settings.predictive_search_enabled -%}
+        <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+          <div class="predictive-search__loading-state">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+            </svg>
+          </div>
+        </div>
+
+        <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+        {%- endif -%}
+    </form>
+  {%- if settings.predictive_search_enabled -%}
+  </predictive-search>
+  {%- endif -%}  
+  </div>
+  </div>
+</section>
+  
+<section class="section-collection-info">
+  <div class="page-width">
+    <div class="collection-info-box">
+      <div class="cinfo-avatar">
+        {%- if collection.metafields.my_fields.avatar != blank -%}
+          <img
+               srcset="{{ collection.metafields.my_fields.avatar | image_url: width: 120 }}"
+               alt="{{ collection.metafields.my_fields.avatar.alt | escape }}"
+               loading="lazy"
+               width="120"
+               height="120"
+          >        
+        {%- endif -%}
+      </div>
+      {%- if collection.metafields.my_fields.name != blank -%}
+      <p class="cinfo-title">{{ collection.metafields.my_fields.name | escape }}</p>      
+      {%- endif -%}
+      {%- if collection.metafields.my_fields.location != blank -%}
+      <p class="cinfo-location">📍 {{ collection.metafields.my_fields.country | escape }}<span class="vendor-review"></span></p>
+      <div class="ssw-html-widget ssw-reviews-badge-widget" data-module="recommendation" data-name="ReviewsBadge"></div>
+      {%- endif -%}
+      {%- if collection.description != blank -%}
+      <div class="cinfo-description">
+        <div class="less-box">{{ collection.description }} <a href="javascript:void(0);" class="btn-less">less</a></div>
+        <div class="more-box">{{ collection.description | truncate: 120 }} <a href="javascript:void(0);" class="btn-more">more</a></div>
+      </div>
+      {%- endif -%}
+      <div class="cinfo-button" id="cinfo-buttons">
+      {%- if collection.metafields.my_fields.buttonlabel != blank -%}      
+        <a{% if collection.metafields.my_fields.buttonlink == blank %} role="link" aria-disabled="true"{% else %} href="{{ collection.metafields.my_fields.buttonlink }}"{% endif %} class="button button-handpick">
+          {{ collection.metafields.my_fields.buttonlabel | escape }}
+        </a>
+      {%- endif -%}
+        <a href="javascript:void(0);" class="btn-contact-form collection-contact-form">Ask seller a question</a>
+        <div class="globo-formbuilder-wrapper">
+          <div class="globo-opacity"></div>
+          <div class="globo-formbuilder" data-id="ODE1MDA="></div>
+        </div>
+      </div>      
+    </div>
+  </div>
+</section>
+
+<div class="section-{{ section.id }}-padding">
+  <div id="ProductGridContainer">
+    
+    {%- paginate collection.products by 1000 -%}
+      {%- if collection.products.size == 0 -%}
+        <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+          <div class="loading-overlay gradient"></div>
+          <div class="title-wrapper center">
+            <h2 class="title title--primary">
+              {{ 'sections.collection_template.empty' | t }}<br>
+              {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}
+            </h2>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="collection page-width">
+          <div class="loading-overlay gradient"></div>
+  
+          <ul id="product-grid" data-id="{{ section.id }}" class="
+            grid product-grid grid--2-col-tablet-down
+            grid--4-col-desktop newcollection-wrap">
+            {%- if collection.metafields.my_fields.price != blank -%}
+            <li class="grid__item">
+              <div class="card-wrapper underline-links-hover mine-card">
+                <div class="card card--standard card--media"
+                     style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">
+                  <div class="card__inner color-background-2 gradient ratio" style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">                    
+                    <div class="card__media">
+                      <div class="media media--transparent media--hover-effect">
+                        <img
+                             srcset="{{ collection.metafields.my_fields.price | image_url: width: 240  }}"
+                             alt="{{ collection.metafields.my_fields.price | escape }}"
+                             loading="lazy"
+                             width="240"
+                             height="360"
+                             >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card__content">
+                    <div class="card__information">
+                      <h3 class="card__heading">
+                        <a href="#" class="full-unstyled-link normal-title">
+                          Prices
+                        </a>
+                      </h3>
+                      <div class="card-information">                        
+                      </div>
+                    </div>                    
+                  </div>
+                </div>
+              </div>            
+            </li>
+            {%- endif -%}
+            {%- if collection.metafields.my_fields.video != blank -%}
+            <li class="grid__item" data-category="">
+              <div class="card-wrapper underline-links-hover mine-card">
+                <div class="card card--standard card--media"
+                     style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">
+                  <div class="card__inner color-background-2 gradient ratio" style="--ratio-percent: {{ 1 | divided_by: 0.666 | times: 100 }}%;">                    
+                    <div class="card__media">
+                      <div class="media media--transparent media--hover-effect">
+                        <video muted loop playsinline autoplay preload="metadata" style="object-fit: cover; object-position: center center;">
+						  <source src="{{ collection.metafields.my_fields.video | file_url  }}" type="video/mp4">
+                        </video>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card__content">
+                    <div class="card__information">
+                      <h3 class="card__heading">
+                        <a href="#" class="full-unstyled-link normal-title">
+                          {{ collection.metafields.my_fields.name | escape }}
+                        </a>
+                      </h3>
+                      <div class="card-information">                        
+                      </div>
+                    </div>                    
+                  </div>
+                </div>
+              </div>            
+            </li>
+            {%- endif -%}
+            {% comment %}
+            {% assign productlist = collections[collection.handle].products | sort : 'published_at' | reverse %}
+            {% endcomment %}
+            {% assign productlist = collections[collection.handle].products %}
+            
+            {% assign ssw_rate_data_key = 'review' %}
+            {% assign ssw_count_rate = 0 %}
+            {% assign ssw_avg_rate = 0 %}
+            {%- for product in productlist -%}
+              {% assign lazy_load = true %}
+              
+            	{%- if product.featured_media -%}
+            	{% if product.available %}
+                  {% assign productTags = product.tags | join: ',' %}
+
+                  {% if product.metafields.ssw[ssw_rate_data_key] %}
+                    {% assign c_ssw_count_rate = product.metafields.ssw[ssw_rate_data_key].count | plus: 0 %}
+                    {% assign c_ssw_avg_rate = product.metafields.ssw[ssw_rate_data_key].avg | plus: 0 %}
+                    {% assign c_ssw_avg_rate_sum = c_ssw_avg_rate | times: c_ssw_count_rate %}
+                    {% assign ssw_count_rate = ssw_count_rate | plus: c_ssw_count_rate %}
+                    {% assign ssw_avg_rate = ssw_avg_rate | plus: c_ssw_avg_rate_sum %}                  
+                  {% endif %}
+            
+                  <li class="grid__item home-collection-li" data-category="{{ productTags }}">
+                    {% render 'card-product-recommend',
+                      card_product: product,
+                      media_aspect_ratio: 'adapt',
+                      show_secondary_image: 'false',
+                      show_vendor: 'false',
+                      show_rating: 'false',
+                      lazy_load: lazy_load
+                    %}
+                  </li>
+                {% endif %}
+            	{%- endif -%}
+              
+            {%- endfor -%}
+            
+            {%- for product in productlist -%}
+              {% assign lazy_load = true %}
+              
+            	{%- if product.featured_media -%}
+            	{% unless product.available %}
+            	{% assign productTags = product.tags | join: ',' %}
+                  <li class="grid__item home-collection-li" data-category="{{ productTags }}">
+                    {% render 'card-product-recommend',
+                      card_product: product,
+                      media_aspect_ratio: 'adapt',
+                      show_secondary_image: 'false',
+                      show_vendor: 'false',
+                      show_rating: 'false',
+                      lazy_load: lazy_load
+                    %}
+                  </li>
+                {% endunless %}
+            	{%- endif -%}
+              
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate, anchor: '' %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>  
+  <input type="hidden" id="vendor_counts" value="{{ ssw_count_rate }}">
+  {% assign ssw_count_rate = ssw_count_rate | times: 1.0 %}
+  <input type="hidden" id="vendor_rating" value="{{ ssw_avg_rate | divided_by: ssw_count_rate | round: 1 }}">  
+  
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.btn-contact-form').click(function() {      
+      setTimeout(function() {        
+        $('#81500-text-2').val($('.cinfo-title').html());
+        $('#globo-formbuilder-81500 .globo-form-id-81500 .globo-form-app > div.header.dismiss').remove();
+        $('<div class="header dismiss"><svg viewBox="0 0 20 20" class="" focusable="false" aria-hidden="true"><path d="M11.414 10l4.293-4.293a.999.999 0 1 0-1.414-1.414L10 8.586 5.707 4.293a.999.999 0 1 0-1.414 1.414L8.586 10l-4.293 4.293a.999.999 0 1 0 1.414 1.414L10 11.414l4.293 4.293a.997.997 0 0 0 1.414 0 .999.999 0 0 0 0-1.414L11.414 10z" fill-rule="evenodd"></path></svg></div>').prependTo('#globo-formbuilder-81500 .globo-form-id-81500 .globo-form-app');
+		$('.globo-formbuilder-wrapper .globo-formbuilder .globo-form-app .message.success').hide();
+        $('.globo-formbuilder-wrapper .globo-formbuilder .globo-form-app form').show();                
+        $('.globo-formbuilder-wrapper').show();
+        $('.globo-formbuilder-wrapper .globo-opacity').show();
+        $('.globo-formbuilder-wrapper .globo-formbuilder').show();        
+      }, 100);
+    });
+    $('body').on('click','.globo-form-app.boxed-layout>.dismiss',function() {
+      $('.globo-formbuilder-wrapper').hide();
+      $('.globo-formbuilder-wrapper .globo-opacity').hide();
+      $('.globo-formbuilder-wrapper .globo-formbuilder').hide();
+      $('#globo-formbuilder-81500 .globo-form-app .globo-form-control input').val('');
+      $('#globo-formbuilder-81500 .globo-form-app .globo-form-control textarea').val('');
+    });
+    $(".newcollection-wrap li.grid__item:hidden").slice(0, 16).slideDown();
+    $('.storeify-formbuilder-button-collection').click( function() {
+      setTimeout(function() {
+        $('.form-vendor').val($('.cinfo-title').html());
+      }, 100);
+  	});  
+    setTimeout(function() {
+      if($('#vendor_counts').val() > 0) {
+        if($('#vendor_rating').val() > 4) {
+          $('.vendor-review').html('<div class="ssw-stars ssw-stars-large"><i class="ssw-icon-star"></i></div>' + $('#vendor_rating').val() + ' (<span>' + $('#vendor_counts').val() + ' Reviews</span>)');
+        } else if($('#vendor_rating').val() > 2.5) {
+          $('.vendor-review').html('<div class="ssw-stars ssw-stars-large"><i class="ssw-icon-star-half"></i></div>' + $('#vendor_rating').val() + ' (<span>' + $('#vendor_counts').val() + ' Reviews</span>)');
+        } else {
+          $('.vendor-review').html('<div class="ssw-stars ssw-stars-large"><i class="ssw-icon-star-empty"></i></div>' + $('#vendor_rating').val() + ' (<span>' + $('#vendor_counts').val() + ' Reviews</span>)');
+        }
+      }
+    }, 1000);
+  });
+  
+  $(window).scroll(function () {
+    if($(window).scrollTop() > $(document).height() - jQuery(window).height() - 40) {
+      $(".newcollection-wrap li.grid__item:hidden").slice(0, 16).slideDown();
+    }
+  });
+</script>
+{% schema %}
+  {
+    "name": "Collection Info",
+    "settings": [      
+	],
+	"presets": [
+      {
+        "name": "Collection Info"        
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

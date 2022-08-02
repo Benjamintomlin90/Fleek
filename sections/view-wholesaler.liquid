@@ -1,0 +1,338 @@
+<section class="section-homepage-banner product-top">  
+  <div class="page-width">
+  <div class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}" tabindex="-1">
+  {%- if settings.predictive_search_enabled -%}
+  <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+    {%- endif -%}
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+      <div class="field">
+        <input class="search__input field__input"
+               id="Search-In-Modal"
+               type="search"
+               name="q"
+               value=""
+               placeholder="Search products or shops"
+               {%- if settings.predictive_search_enabled -%}
+               role="combobox"
+               aria-expanded="false"
+               aria-owns="predictive-search-results-list"
+               aria-controls="predictive-search-results-list"
+               aria-haspopup="listbox"
+               aria-autocomplete="list"
+               autocorrect="off"
+               autocomplete="off"
+               autocapitalize="off"
+               spellcheck="false"
+               {%- endif -%}
+               >
+        <label class="field__label" for="Search-In-Modal">Search products or shops</label>
+        <input type="hidden" name="options[prefix]" value="last">
+        <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+          <svg class="icon icon-search" aria-hidden="true" focusable="false" role="presentation">
+            <use href="#icon-search">
+          </svg>
+        </button>
+      </div>
+
+        {%- if settings.predictive_search_enabled -%}
+        <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+          <div class="predictive-search__loading-state">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+            </svg>
+          </div>
+        </div>
+
+        <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+        {%- endif -%}
+    </form>
+  {%- if settings.predictive_search_enabled -%}
+  </predictive-search>
+  {%- endif -%}  
+  </div>
+  </div>
+</section>
+
+<div class="view-wholesaler-filter">
+  <div class="page-width">
+    <div class="view-btn-wrap active">
+      <div class="view-btn-container-box views-all">
+        <div class="view-btn"><span>All</span></div>
+      </div>
+      <div class="view-btn-container-box views-category">
+        <div class="view-btn">
+          <span>Category <span></span></span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="https://www.w3.org/2000/svg" class="FilterPills__StyledChevron-sc-1m5nm3x-5 gNrMDK" style="transform: rotate(0deg);"><path d="M4.9914 5.5C4.83787 5.5 4.70994 5.44739 4.582 5.34217L0.232203 1.65941C-0.0492551 1.42266 -0.0748422 1.00178 0.155441 0.738722C0.385725 0.449362 0.795118 0.423057 1.05099 0.659805L4.9914 4.00059L8.95739 0.659805C9.23885 0.423057 9.62265 0.475668 9.85294 0.738722C10.0832 1.02808 10.032 1.42266 9.77618 1.65941L5.42638 5.34217C5.27285 5.44739 5.11933 5.5 4.9914 5.5Z" fill="#666666"></path></svg>
+          <svg class="svg-close" width="10" height="10" viewBox="0 0 15 15" xmlns="https://www.w3.org/2000/svg" stroke="#ffffff" stroke-width="2" fill="white" stroke-linecap="square" class="FilterPills__StyledClose-sc-1m5nm3x-4 iqZJvG"><path d="M2.667 2l11.07 11.552M2 13.07L13.552 2"></path></svg>
+        </div>
+        <div class="view-btn-dropdown">   
+          <div class="view-btn-head">
+            <p>Category</p>
+            <button class="btn-clear-all">Clear all</button>
+            <svg class="SVGIcon__StyledSvg-sc-6bkwzg-0 bRtuCv" focusable="false" viewBox="0 0 24 24" role="img" fill="none" font-size="16px" color="#333333"><path d="M21.4289 2.57141L2.57178 21.4286" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.57178 2.57141L21.4289 21.4286" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>Close</title></svg>
+          </div>
+          <div class="view-btn-container">
+            <div class="view-btn-boxes">
+              <div class="view-btn-box">
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Sweatshirts</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Hoodies</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Tshirts</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Shirts</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Jerseys</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Fleece</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Jeans</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Jackets</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Puffers</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Trench</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Denim</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Sherpa</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Carhartt</span>
+                </div>
+                
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Y2K</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>luxury</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Streetwear</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Military</span>
+                </div>                
+              </div>
+            </div>
+          </div>          
+          <div class="view-btn-foot-before"></div>
+          <div class="view-btn-foot">
+            <p></p>
+            <button class="btn-clear-all-bottom">Clear all</button>
+            <button class="btn-apply">Apply</button>            
+          </div>
+        </div>
+      </div>
+      <div class="view-btn-container-box views-location">
+        <div class="view-btn">
+          <span>Location <span></span></span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="https://www.w3.org/2000/svg" class="FilterPills__StyledChevron-sc-1m5nm3x-5 gNrMDK" style="transform: rotate(0deg);"><path d="M4.9914 5.5C4.83787 5.5 4.70994 5.44739 4.582 5.34217L0.232203 1.65941C-0.0492551 1.42266 -0.0748422 1.00178 0.155441 0.738722C0.385725 0.449362 0.795118 0.423057 1.05099 0.659805L4.9914 4.00059L8.95739 0.659805C9.23885 0.423057 9.62265 0.475668 9.85294 0.738722C10.0832 1.02808 10.032 1.42266 9.77618 1.65941L5.42638 5.34217C5.27285 5.44739 5.11933 5.5 4.9914 5.5Z" fill="#666666"></path></svg>
+          <svg class="svg-close" width="10" height="10" viewBox="0 0 15 15" xmlns="https://www.w3.org/2000/svg" stroke="#ffffff" stroke-width="2" fill="white" stroke-linecap="square" class="FilterPills__StyledClose-sc-1m5nm3x-4 iqZJvG"><path d="M2.667 2l11.07 11.552M2 13.07L13.552 2"></path></svg>
+        </div>
+        <div class="view-btn-dropdown">   
+          <div class="view-btn-head">
+            <p>Location</p>
+            <button class="btn-clear-all">Clear all</button>
+            <svg class="SVGIcon__StyledSvg-sc-6bkwzg-0 bRtuCv" focusable="false" viewBox="0 0 24 24" role="img" fill="none" font-size="16px" color="#333333"><path d="M21.4289 2.57141L2.57178 21.4286" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.57178 2.57141L21.4289 21.4286" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>Close</title></svg>
+          </div>
+          <div class="view-btn-container">
+            <div class="view-btn-boxes">
+              <div class="view-btn-box">
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>                  
+                  <span>USA</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>United Kingdom</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Pakistan</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Italy</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>Netherlands</span>
+                </div>
+                <div class="view-btnd-item">
+                  <div class="view-icons">
+                    <svg class="svg_unchecked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M4.57129 8L11.4284 8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path><title>IntermediateCheckmark</title></svg>
+                    <svg class="svg_checked" focusable="false" viewBox="0 0 16 16" role="img" stroke-width="1.5" font-size="16px"><path d="M6.08714 10.4652L4.01611 8.25765C3.78335 8.00954 3.40734 8.00954 3.17457 8.25765C2.94181 8.50576 2.94181 8.90656 3.17457 9.15467L5.66935 11.8139C5.90212 12.062 6.27813 12.062 6.51089 11.8139L12.8254 5.0831C13.0582 4.83499 13.0582 4.43419 12.8254 4.18608C12.5927 3.93797 12.2167 3.93797 11.9839 4.18608L6.08714 10.4652Z" fill="currentColor"></path><title>Checkmark</title></svg>
+                  </div>
+                  <span>South Korea</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="view-btn-foot-before"></div>
+          <div class="view-btn-foot">
+            <p></p>
+            <button class="btn-clear-all-bottom">Clear all</button>
+            <button class="btn-apply">Apply</button>            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.view-btn-wrap .view-btn').click(function() {
+      $(this).parent().parent().find('> .view-btn-container-box').removeClass('active');
+      if($(this).parent().hasClass('active')) {
+        $(this).parent().removeClass('active');
+      } else {
+        $(this).parent().addClass('active');
+      }
+    });
+    $('.view-btnd-item').click(function() {
+      if($(this).hasClass('active')) {
+        $(this).removeClass('active');
+      } else {
+        $(this).addClass('active');
+      }
+      if($(this).parent().find('> .active').length > 0) {
+        $(this).parent().parent().parent().prev().find('.btn-clear-all').addClass('active');
+      } else {
+        $(this).parent().parent().parent().prev().find('.btn-clear-all').removeClass('active');
+      }
+    });
+    $('.btn-clear-all').click(function() {
+      $(this).parent().next().find('.view-btnd-item').removeClass('active');
+    });    
+    $('.btn-clear-all-bottom').click(function() {
+      $(this).parent().prev().prev().find('.view-btnd-item').removeClass('active');
+    });
+    $('.view-btn-container-box').click(function(e) {
+      e.stopPropagation();
+    });
+    $('.view-btn-wrap .view-btn-container-box .view-btn-dropdown .view-btn-head svg').click(function() {
+      $('.view-btn-container-box').removeClass('active');
+    });
+    $('body').click(function() {
+      $('.view-btn-container-box').removeClass('active');
+    });    
+  });
+</script>
+  
+{% schema %}
+  {
+    "name": "View wholesalers", 
+    "tag": "section",
+    "class": "section section-collection-list",
+    "settings": [],
+    "presets": [
+    {
+      "name": "View wholesalers"
+    }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

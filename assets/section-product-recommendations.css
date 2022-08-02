@@ -1,0 +1,20 @@
+.product-recommendations {
+  display: block;
+}
+
+.product-recommendations:not(.product-recommendations--loaded) {
+  padding: 0;
+  margin: 0;
+}
+
+.product-recommendations__heading {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2F2F2F;
+}
+.collection-recommend-box .card .card__inner .card__media {
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+}

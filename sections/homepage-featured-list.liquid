@@ -1,0 +1,82 @@
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width isolate">
+    <div class="page-wholesale-featured-list">
+      <p class="featured-list-title">{{ section.settings.htitle | escape }}</p>
+      <ul>
+        {%- for block in section.blocks  -%}
+        {% assign collection = block.settings.collection %}
+        <li>
+          <a href="{{ collection.url }}">            
+            <img
+              srcset="{{ block.settings.image | image_url: width: 240 }}"
+              loading="lazy"
+              alt="{{ block.settings.image.alt | escape }}"
+              width="180"
+              height="120"
+            >
+            <p>{{ block.settings.title | escape }}</p>
+          </a>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>    
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection list",
+  "tag": "section",
+  "class": "section featured-collections-list",
+  "max_blocks": 100,
+  "settings": [
+	{
+      "type": "text",
+      "id": "htitle",
+      "default": "Featured collections",
+      "label": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "t:sections.collection-list.blocks.featured_collection.name",
+      "settings": [
+		{
+          "type": "text",
+          "id": "title",
+          "default": "Collection",
+          "label": "Heading"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.collection-list.blocks.featured_collection.settings.collection.label"
+        },
+		{
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection list",
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,247 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- liquid
+  assign columns_mobile_int = section.settings.mobile_show_product | plus: 0 
+  assign columns_desktop_int = section.settings.desktop_show_product | plus: 0 
+  assign Rows_mobile_int = section.settings.mobile_show_collection | plus: 0 
+  assign Rows_desktop_int = section.settings.desktop_show_collection | plus: 0 
+  assign Rows_int = 0
+-%}
+
+<script>
+  
+</script>
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="collection-list-wrapper page-width isolate{% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false or section.blocks.size > collections.size %} no-mobile-link{% endif %} section-{{ section.id }}-padding">
+    <div class="page-wholesale-list-box page-homepage-list">
+      <div class="wholesale-list-box-wrapper">
+        <ul>          
+          {% comment %}
+          {% assign blocklist = "" | split: ',' %}
+          {%- for block in section.blocks -%}
+            {% assign blocklist = blocklist | concat: block.collection %}
+          {%- endfor -%}
+          {% endcomment %}
+		  {% assign totalrowcount = 0 %}
+          {%- for block in section.blocks  -%}
+          {% assign collection = block.settings.collection %}
+          {% assign totalrowcount = totalrowcount | plus: 1 %}
+          <li data-collection="{{ collection.url }}" style="{% if totalrowcount > Rows_int %}display:none;{% endif %}">
+            <div class="collection-info-box">
+              <h2 class="title h2">{{ block.settings.title | escape }}</h2>  
+              <a href="{{ collection.url }}" class="link underlined-link">{{ 'sections.featured_collection.view_all' | t }}</a>                     
+            </div>
+            <div class="collection-list-box">
+              <ul class="grid product-grid">
+              {% if totalrowcount <= Rows_int %}
+              {%- assign totalcount = 0 -%}
+              {% assign productlist = collections[collection.handle].products | sort : 'published_at' | reverse %}
+              {% for product in productlist %}
+                {% if product.available %}
+                {% assign totalcount = totalcount | plus: 1 %}
+                {% if totalcount <= columns_desktop_int %}
+                {%- if product.featured_media -%}
+                  <li class="grid__item">
+                    {% render 'card-product',
+                      card_product: product,
+                      media_aspect_ratio: 'adapt',
+                      show_secondary_image: 'false',
+                      show_vendor: 'false',
+                      show_rating: 'false',
+                      lazy_load: lazy_load
+                    %}
+                  </li>
+            	{%- endif -%}
+                {% endif %}
+                {% endif %}
+              {% endfor %}                
+              {% endif %}
+              </ul>              
+            </div>
+          </li>
+          {%- endfor -%}
+
+        </ul>
+        <div class="load_more_section">
+          <input type="hidden" value="0" id="md_flag">
+          <input type="hidden" value="1" class="next_url">
+          <input type="hidden" value="{{ Rows_desktop_int }}" id="rowdesktopval">
+          <input type="hidden" value="{{ Rows_mobile_int }}" id="rowmobileval">
+          <input type="hidden" value="{{ columns_mobile_int }}" id="columnmobileval">
+          <input type="hidden" value="{{ columns_desktop_int }}" id="columndesktopval">
+          <div class="load-more_wrap">
+            <button class="btn js-load-more">Load more</button>
+          </div>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $(window).on('load', function () {
+      $('.js-load-more').trigger('click');
+    });
+  });
+  $('.js-load-more').on('click', function(){
+    var $vcount = 0;
+    var $hcount = 0;
+    if ($(window).width() < 768) {
+      $vcount = $('#rowmobileval').val();
+      $hcount = $('#columnmobileval').val();
+    } else {
+      $vcount = $('#rowdesktopval').val();
+      $hcount = $('#columndesktopval').val();
+    }
+    var $nextval = $('.next_url').val();
+    if($(".page-homepage-list .wholesale-list-box-wrapper > ul > li:hidden").length > 0) {
+      $(".page-homepage-list .wholesale-list-box-wrapper > ul > li:hidden").slice(0, $vcount).each(function(index) {
+        var $this = $(this);
+        $.ajax({
+          url: $this.attr('data-collection'),
+          type: 'GET',
+          dataType: 'html',
+          success: function(responseHTML){
+            $(responseHTML).find('.newcollection-wrap > li').slice(0,$hcount).each(function() {
+              $this.find('.collection-list-box > ul').append($(this).get(0).outerHTML);
+            });
+            if($(responseHTML).find('.newcollection-wrap > li').length > $hcount) {
+              $this.find('.collection-list-box > ul').append('<li class="grid__item li-hloadmore"><div class="load_more_section_column"><input type="hidden" value="1" class="column_url"><div class="load-more_wrap"><img src="https://cdn.shopify.com/s/files/1/0610/8233/7518/files/loadmore.png?v=1650356256" alt="load more button" width=24 height=24><button class="btn js-load-more-column">Load more</button></div></div></li>');
+            }
+            $this.show();
+          },
+          complete: function() {
+            $nextval++;
+            $('.next_url').val($nextval);
+            if($(".page-homepage-list .wholesale-list-box-wrapper > ul > li:hidden").length < 1) {
+              $('.js-load-more').hide();
+            }
+          }
+        });
+      });    
+    }
+  });
+  $('.wholesale-list-box-wrapper').on('click','.load_more_section_column',function() {
+    var $this = $(this).parent().parent().parent().parent();
+    var $collection = $this.attr('data-collection');
+    var $column = $(this).find('.column_url').val();
+    var $cmax = $column * 10 + 10;
+    var $totals = 0;
+    $.ajax({
+      url: $collection,
+      type: 'GET',
+      dataType: 'html',
+      success: function(responseHTML){
+        $totals = $(responseHTML).find('.newcollection-wrap > li').length;
+        $this.find('.load_more_section_column').parent().remove();
+        $(responseHTML).find('.newcollection-wrap > li').slice($column*10,$cmax).each(function() {
+          $this.find('.collection-list-box > ul').append($(this).get(0).outerHTML);
+        });
+        if($(responseHTML).find('.newcollection-wrap > li').length > $cmax) {
+          $column++;
+          $this.find('.collection-list-box > ul').append('<li class="grid__item"><div class="load_more_section_column"><input type="hidden" value="' + $column + '" class="column_url"><div class="load-more_wrap"><img src="https://cdn.shopify.com/s/files/1/0610/8233/7518/files/loadmore.png?v=1650356256" alt="load more button" width=24 height=24><button class="btn js-load-more-column">Load more</button></div></div></li>');
+        }
+        $this.show();
+      },
+      complete: function() {
+        $(this).find('.column_url').val($column);
+        if($cmax >= $totals) {
+          $(this).parent().hide();
+        }
+      }
+    });
+  });
+  $(window).scroll(function (event) {
+    event.stopImmediatePropagation();
+    if($(window).scrollTop() > $(document).height() - $(window).height() - 40) {
+      if($('#md_flag').val() == 0) {
+        if($(".page-homepage-list .wholesale-list-box-wrapper > ul > li:last-child:hidden").length>0) {
+          $('.js-load-more').trigger('click');
+          $('#md_flag').val(1);          
+        } else {
+          $(".page-homepage-list .wholesale-list-box-wrapper > ul > li:last-child .load_more_section_column").trigger('click');
+        }
+        setTimeout(function() {
+          $('#md_flag').val(0);
+        }, 1000);
+      }      
+    }    
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Homepage list",
+  "tag": "section",
+  "class": "section section-collection-list",
+  "max_blocks": 100,
+  "settings": [
+    {
+      "type": "text",
+      "id": "mobile_show_collection",
+      "default": "3",
+      "label": "Mobile collection view max"
+    },
+	{
+      "type": "text",
+      "id": "desktop_show_collection",
+      "default": "5",
+      "label": "Desktop collection view max"
+    },
+	{
+      "type": "text",
+      "id": "mobile_show_product",
+      "default": "7",
+      "label": "Mobile product view max"
+    },
+	{
+      "type": "text",
+      "id": "desktop_show_product",
+      "default": "10",
+      "label": "Desktop product view max"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "t:sections.collection-list.blocks.featured_collection.name",
+      "settings": [
+		{
+          "type": "text",
+          "id": "title",
+          "default": "Collection",
+          "label": "Heading"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.collection-list.blocks.featured_collection.settings.collection.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage list",
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

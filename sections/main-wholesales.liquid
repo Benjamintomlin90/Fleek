@@ -1,0 +1,126 @@
+<section class="{{ section.class }}">
+  <div class="page-width">
+    {%- unless section.settings.heading == blank -%}
+      <div class="title-wrapper-with-link title-wrapper--no-top-margin">
+        <h2 class="title">{{ section.settings.heading | escape }}</h2>
+        <a href="/pages/meet-our-wholesalers" class="link underlined-link">{{ 'sections.featured_collection.view_all' | t }}</a>       
+      </div>
+    {%- endunless -%}
+  
+    <div class="product-wrap wholesale-wrap">
+      <ul id="Slider-{{ section.id }}" class="grid product-grid contains-card grid--4-col-desktop" role="list">        
+        <!--
+        <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="grid__item whole-sale-first-mobile">
+          <div class="col-top-box">
+            <img src="https://cdn.shopify.com/s/files/1/0610/8233/7518/files/image_from_ios.png?v=1647619380" alt="fleek-logo-video">
+            <div data-video="https://cdn.shopify.com/s/files/1/0610/8233/7518/files/Image_from_iOS2.mp4?v=1647622704" class="product-video-box">                
+              <video muted loop playsinline autoplay class="ww-video video-js" preload="metadata">
+                <source src="https://cdn.shopify.com/s/files/1/0610/8233/7518/files/Image_from_iOS2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="col-top-bot">
+            <a href="#" class="full-unstyled-link card-title-box">
+              <p class="col-title">The vintage revolution</p>
+            </a>
+          </div>
+        </li> -->
+        {%- for block in section.blocks -%}        
+        <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="grid__item {% if forloop.first == true %} whole-sale-first {% endif %}">
+          <div class="col-top-box">
+            <div class="icon-hand-pick">
+              <img src="https://cdn.shopify.com/s/files/1/0610/8233/7518/files/icon-handpick.png?v=1647275782" alt="fleek-handpick" loading="lazy">
+              <span>Handpick</span>
+            </div> 
+            {%- if block.settings.image != blank -%}
+            <img
+                 srcset="{{ block.settings.image | img_url: '240x' }}"
+                 src="{{ block.settings.image | img_url: '240x' }}"
+                 sizes="(min-width: 240px)"
+                 alt="{{ block.settings.subheading | escape }}"
+                 loading="lazy"
+                 width="{{ block.settings.image.width }}"
+                 height="{{ block.settings.image.height }}"
+                 class="collage-card__image"
+                 >
+            {%- else -%}
+            {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg placeholder collage-card__image' }}
+            {%- endif -%}  
+            <div data-video="{{ block.settings.videourl }}" class="product-video-box">                
+              <video muted loop playsinline autoplay class="ww-video video-js" preload="metadata">
+                <source src="{% if forloop.first == true %} {{ block.settings.videourl }} {% endif %}" type="video/mp4">
+              </video>   
+            </div>
+          </div>
+          <div class="col-top-bot">
+            <a href="{{ block.settings.collection.url }}" class="full-unstyled-link card-title-box">
+              <p class="col-title">{{ block.settings.subheading }}</p>
+            </a>
+          </div>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Wholesalers",
+	"class": "collage-section-wholesalers",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "Schedule video handpicks",
+        "label": "t:sections.collage.settings.heading.label"
+      }
+	],
+	"blocks": [
+      {
+        "type": "video",
+        "name": "t:sections.collage.blocks.video.name",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "t:sections.collage.blocks.image.settings.image.label"
+          },
+          {
+            "type": "text",
+            "id": "videourl",
+            "default": "Video Url:https://",
+            "label": "Video Url"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "t:sections.collage.blocks.collection.settings.collection.label"
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "default": "Title",
+            "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__1.label"
+          }
+        ]
+      }
+	],
+	"presets": [
+      {
+        "name": "Wholesalers",
+        "blocks": [
+          {
+            "type": "video"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
